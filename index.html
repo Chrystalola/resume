@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>罗铃泉 Lingquan Luo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital,wght@0,400;1,400&family=Manrope:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:#000}
+::-webkit-scrollbar-thumb{background:#1f2937;border-radius:3px}
+body{background:#000;color:#fff;overflow-x:hidden;margin:0;padding:0;
+  font-family:"Space Grotesk","Noto Serif SC",ui-sans-serif,system-ui,sans-serif;cursor:none;
+  -webkit-font-smoothing:antialiased}
+
+.scroll-container{position:relative;width:100%;height:600vh;background:#000}
+.fixed-viewport{position:fixed;inset:0;width:100%;height:100%;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;background:#000;
+  transition:opacity .45s ease,visibility .45s ease}
+.fixed-viewport.leaving{opacity:0;visibility:hidden;pointer-events:none}
+
+/* ===== 3D 土星头像（CSS-only，首屏主角） ===== */
+.hero3d{position:absolute;top:50%;left:50%;transform:translate(-50%,-42%);z-index:44;
+  width:360px;height:360px;perspective:900px;pointer-events:none}
+.hero3d-scene{position:relative;width:100%;height:100%;transform-style:preserve-3d;
+  animation:hero3d-float 6s ease-in-out infinite}
+@keyframes hero3d-float{0%,100%{transform:translateY(0) rotateX(4deg)}
+  50%{transform:translateY(-14px) rotateX(-4deg)}}
+.hero3d-planet{position:absolute;top:50%;left:50%;width:170px;height:170px;margin:-85px 0 0 -85px;
+  border-radius:50%;transform-style:preserve-3d;animation:hero3d-spin 30s linear infinite}
+@keyframes hero3d-spin{to{transform:rotateY(360deg)}}
+.hero3d-face{position:absolute;inset:0;border-radius:50%;object-fit:cover;transform:scale(.5);transform-origin:center;
+  border:2px solid rgba(255,255,255,.25);
+  box-shadow:0 0 60px rgba(203,141,255,.55),inset 0 0 40px rgba(0,0,0,.5)}
+.hero3d-aura{position:absolute;inset:-12px;border-radius:50%;
+  background:radial-gradient(circle, rgba(203,141,255,.35), transparent 68%);
+  filter:blur(10px);z-index:-1}
+.hero3d-crater{position:absolute;border-radius:50%;background:rgba(0,0,0,.22);
+  box-shadow:inset 1px 1px 3px rgba(255,255,255,.18)}
+.hero3d-crater-1{width:22px;height:22px;top:34px;left:108px}
+.hero3d-crater-2{width:14px;height:14px;top:118px;left:42px}
+/* 三道环，倾斜绕行星 */
+.hero3d-ring{position:absolute;top:50%;left:50%;border-radius:50%;border-style:solid;
+  transform-style:preserve-3d;transform:rotateX(76deg)}
+.hero3d-ring-1{width:300px;height:70px;margin:-35px 0 0 -150px;border-width:3px;
+  border-color:#22d3ee #CB8DFF #fff #CB8DFF;animation:ring1 16s linear infinite;
+  box-shadow:0 0 22px rgba(203,141,255,.4)}
+.hero3d-ring-2{width:340px;height:80px;margin:-40px 0 0 -170px;border-width:2px;
+  border-color:rgba(255,255,255,.55);animation:ring2 22s linear infinite reverse}
+.hero3d-ring-3{width:250px;height:58px;margin:-29px 0 0 -125px;border-width:1px;
+  border-color:rgba(203,141,255,.7);animation:ring3 13s linear infinite}
+@keyframes ring1{to{transform:rotateX(76deg) rotateZ(360deg)}}
+@keyframes ring2{to{transform:rotateX(76deg) rotateZ(360deg)}}
+@keyframes ring3{to{transform:rotateX(76deg) rotateZ(360deg)}}
+.hero3d-satellite{position:absolute;top:50%;left:50%;width:9px;height:9px;margin:-4.5px 0 0 -4.5px;
+  border-radius:50%;background:#fbbf24;box-shadow:0 0 16px #fbbf24,0 0 4px #fff;
+  animation:orbit 6s linear infinite}
+@keyframes orbit{0%{transform:rotate(0deg) translateX(185px) rotate(0deg)}
+  100%{transform:rotate(360deg) translateX(185px) rotate(-360deg)}}
+.hero3d-glow{position:absolute;top:50%;left:50%;width:420px;height:420px;margin:-210px 0 0 -210px;
+  border-radius:50%;background:radial-gradient(circle, rgba(34,211,238,.12), transparent 62%);
+  filter:blur(20px);z-index:-2;animation:pulse-glow 5s ease-in-out infinite}
+@keyframes pulse-glow{0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.12);opacity:1.1}}
+
+/* ===== Brand / Nav（白底黑字药丸，对齐参考） ===== */
+.premium-brand-header{position:absolute;top:clamp(24px,3vw,48px);left:clamp(24px,3vw,48px);
+  z-index:45;display:flex;align-items:center;gap:clamp(8px,0.8vw,14px);user-select:none;
+  pointer-events:auto;will-change:transform,opacity,filter}
+.premium-brand-text{font-family:"Instrument Serif","Noto Serif SC",serif;
+  font-size:clamp(22px,2.2vw,32px);font-weight:500;color:#fff;letter-spacing:-0.03em}
+.premium-brand-text .accent{color:#CB8DFF}
+.premium-brand-logo-svg{width:clamp(28px,2.6vw,44px);height:auto;opacity:0.95}
+.premium-header-nav{position:absolute;top:clamp(24px,3vw,48px);right:clamp(24px,3vw,48px);
+  z-index:50;pointer-events:auto;will-change:transform,opacity,filter}
+.premium-nav-desktop{display:block}
+.premium-nav-list{display:flex;gap:6px;margin:0;padding:0;list-style:none;align-items:center}
+.premium-nav-item{margin:0;padding:0}
+.premium-nav-link{display:block;background:#fff;color:#111;
+  font-family:"Manrope","Noto Serif SC",sans-serif;font-size:clamp(12px,0.9vw,15px);
+  font-weight:500;text-decoration:none;padding:clamp(8px,0.7vw,12px) clamp(14px,1.1vw,20px);
+  border-radius:8px;transition:opacity .2s,transform .2s;white-space:nowrap}
+.premium-nav-link:hover{opacity:0.9;transform:scale(1.03)}
+.premium-nav-link.active{background:#CB8DFF;color:#fff}
+.premium-hamburger{display:none}
+@media(max-width:768px){
+  .premium-nav-desktop{display:none}
+  .premium-hamburger{display:flex;flex-direction:column;justify-content:center;align-items:center;
+    gap:5px;width:44px;height:44px;background:rgba(255,255,255,.12);
+    backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.15);border-radius:10px;
+    cursor:pointer;padding:0;z-index:60;position:relative}
+}
+.premium-hamburger-line{display:block;width:20px;height:1.5px;background:#fff;border-radius:2px;
+  transition:transform .3s,opacity .2s;transform-origin:center}
+.premium-hamburger-line.top-open{transform:translateY(6.5px) rotate(45deg)}
+.premium-hamburger-line.mid-open{opacity:0}
+.premium-hamburger-line.bot-open{transform:translateY(-6.5px) rotate(-45deg)}
+.premium-mobile-menu{position:fixed;inset:0;z-index:55;background:rgba(0,0,0,.88);
+  backdrop-filter:blur(40px);display:flex;align-items:center;justify-content:center;
+  opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+.premium-mobile-menu.open{opacity:1;visibility:visible}
+.premium-mobile-menu-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.premium-mobile-menu-link{font-family:"Instrument Serif","Noto Serif SC",serif;font-size:40px;
+  color:#fff;text-decoration:none;letter-spacing:-0.02em;line-height:1.3;padding:8px 24px}
+.premium-mobile-menu-link:hover{opacity:0.6}
+
+/* ===== Hero 文字卡（头像上方，直角玻璃） ===== */
+.premium-botanical-card{position:absolute;bottom:clamp(24px,3vw,48px);left:clamp(24px,3vw,48px);
+  width:clamp(380px,30vw,540px);max-width:90vw;background:rgba(255,255,255,.16);
+  backdrop-filter:blur(80px);border:1px solid rgba(255,255,255,.15);border-radius:0;
+  padding:clamp(32px,3.2vw,56px);z-index:45;pointer-events:auto;
+  box-shadow:0 30px 60px rgba(0,0,0,.3);will-change:transform,opacity,filter}
+.premium-card-meta{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:0.2em;
+  color:#CB8DFF;text-transform:uppercase;margin:0 0 clamp(12px,1.2vw,20px) 0}
+.premium-card-title{font-family:"Instrument Serif","Noto Serif SC",serif;
+  font-size:clamp(38px,4.4vw,62px);line-height:1.05;font-weight:400;color:#fff;
+  margin:0 0 clamp(10px,1.2vw,20px) 0;letter-spacing:-0.01em}
+.premium-card-title .italic{font-style:italic;color:#CB8DFF}
+.premium-card-subtext{font-family:"Manrope","Noto Serif SC",sans-serif;
+  font-size:clamp(12px,1vw,15px);line-height:1.6;color:rgba(255,255,255,.64);
+  letter-spacing:0.01em;margin:0}
+.premium-action-circle{position:absolute;right:calc(-1*(clamp(80px,7vw,112px)/2));
+  bottom:clamp(20px,2.5vw,40px);width:clamp(80px,7vw,112px);height:clamp(80px,7vw,112px);
+  border-radius:50%;background:#CB8DFF;color:#fff;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .25s,background-color .2s;z-index:55}
+.premium-action-circle:hover{transform:scale(1.08);background:#d9a8ff}
+.premium-action-circle svg{width:clamp(30px,2.8vw,44px);height:clamp(18px,1.8vw,28px);
+  stroke:#fff;stroke-width:1.75;fill:none;transition:transform .25s}
+.premium-action-circle:hover svg{transform:translateX(4px)}
+@media(max-width:768px){.premium-botanical-card{bottom:32px;left:24px;padding:32px 24px;
+  width:calc(100vw - 48px)}.hero3d{transform:translate(-50%,-70%);width:260px;height:260px}}
+
+/* ===== Feature cards ===== */
+.premium-features-container{position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);width:max-content;max-width:95%;
+  display:grid;grid-template-columns:repeat(3,280px);justify-content:center;gap:16px;
+  z-index:46;pointer-events:none;align-items:stretch}
+.premium-feature-card{background:rgba(255,255,255,.16);backdrop-filter:blur(80px);
+  border:1px solid rgba(255,255,255,.15);border-radius:0;padding:24px;
+  width:280px;height:440px;box-shadow:0 30px 60px rgba(0,0,0,.3);
+  display:flex;flex-direction:column;justify-content:flex-start;align-items:flex-start;
+  transition:border-color .3s;will-change:transform,opacity,filter}
+.premium-feature-card:hover{border-color:rgba(255,255,255,.45)}
+.premium-feature-icon-wrapper{margin-bottom:32px;color:#CB8DFF;display:flex}
+.premium-feature-icon-wrapper svg{width:clamp(36px,3.5vw,48px);height:clamp(36px,3.5vw,48px)}
+.premium-feature-title{font-family:"Instrument Serif","Noto Serif SC",Georgia,serif;
+  font-size:24px;font-weight:400;line-height:1.15;color:#fff;margin:auto 0 8px 0;letter-spacing:-0.01em}
+.premium-feature-desc{font-family:"Manrope","Noto Serif SC",sans-serif;
+  font-size:clamp(12px,1vw,14px);line-height:20px;color:rgba(255,255,255,.64);margin:0}
+@media(max-width:768px){.premium-features-container{grid-template-columns:1fr;width:calc(100% - 48px);
+  left:24px;transform:translate(0,-50%);height:auto;max-height:80vh;overflow-y:auto}
+  .premium-feature-card{width:100%;height:auto;min-height:240px}}
+
+/* ===== Mission ===== */
+.mission-container{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  pointer-events:none;z-index:40;padding:0 24px}
+.mission-inner{position:relative;width:100%;max-width:64rem;height:100%;
+  display:flex;align-items:center;justify-content:center}
+.mission-para{position:absolute;text-align:center;font-family:"Instrument Serif","Noto Serif SC",Georgia,serif;
+  font-size:1.875rem;color:rgba(255,255,255,.95);line-height:1.375;letter-spacing:-0.025em;
+  will-change:transform,opacity,filter}
+@media(min-width:768px){.mission-para{font-size:3rem}}
+@media(min-width:1024px){.mission-para{font-size:3.75rem}}
+.mission-pill{display:inline-block;padding:2px 16px;margin:0 6px;background:#CB8DFF;color:#fff;
+  border-radius:9999px;vertical-align:middle;font-family:"Instrument Serif","Noto Serif SC",Georgia,serif}
+@media(min-width:768px){.mission-pill{padding:4px 24px;margin:0 10px}}
+
+/* ===== Contact card ===== */
+.feedback-container{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  pointer-events:none;z-index:50;padding:0 24px}
+.feedback-form-card{position:relative;width:100%;max-width:30rem;
+  background:rgba(0,0,0,.45);backdrop-filter:blur(48px);border:1px solid rgba(255,255,255,.1);
+  padding:32px;text-align:center;pointer-events:auto;display:flex;flex-direction:column;
+  align-items:center;user-select:none;will-change:transform,opacity,filter}
+@media(min-width:768px){.feedback-form-card{padding:48px}}
+.fb-logo{width:40px;height:40px;margin-bottom:20px}
+.fb-title{font-family:"Instrument Serif","Noto Serif SC",Georgia,serif;font-size:1.5rem;
+  color:#fff;font-weight:400;letter-spacing:-0.025em;margin:0 0 8px 0}
+@media(min-width:768px){.fb-title{font-size:1.875rem}}
+.fb-sub{font-family:"Space Grotesk",sans-serif;font-size:10px;color:rgba(255,255,255,.5);
+  text-transform:uppercase;letter-spacing:0.05em;margin:0 0 28px 0;line-height:1.625;max-width:20rem}
+@media(min-width:768px){.fb-sub{font-size:12px}}
+.ct-grid{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ct-item{padding:14px 12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+  transition:all .3s;text-align:center}
+.ct-item:hover{background:rgba(255,255,255,.1);border-color:#CB8DFF}
+.ct-label{font-family:"JetBrains Mono",monospace;font-size:9px;color:rgba(255,255,255,.4);
+  text-transform:uppercase;letter-spacing:0.14em;margin-bottom:6px}
+.ct-value{font-family:"Space Grotesk",sans-serif;font-size:12px;color:#fff;text-decoration:none;
+  word-break:break-all}
+.ct-value:hover{color:#CB8DFF}
+.ct-copy{background:none;border:none;color:#fff;cursor:pointer;font-family:"Space Grotesk",sans-serif;
+  font-size:12px;padding:0;transition:color .3s}
+.ct-copy:hover{color:#CB8DFF}
+
+/* ===== Background ===== */
+.bg-wrapper{position:absolute;top:-5%;left:-5%;right:-5%;bottom:-5%;width:110%;height:110%;
+  pointer-events:none;transform:translate3d(0,0,0);
+  transition:transform .4s cubic-bezier(.15,.85,.35,1);z-index:0}
+.bg-wrapper video{position:absolute;width:0;height:0;opacity:0}
+.bg-wrapper canvas{width:100%;height:100%;display:block}
+.loading-screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;background:#000;z-index:60;transition:opacity 1s;padding:24px;text-align:center}
+.loading-screen.hidden{opacity:0;pointer-events:none}
+.loading-spinner{width:64px;height:64px;margin-bottom:16px;animation:spin 2s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-family:"JetBrains Mono",monospace;font-size:14px;letter-spacing:0.1em;
+  color:#6b7280;text-transform:uppercase;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.error-screen{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;
+  justify-content:center;background:#000;z-index:55;padding:24px;text-align:center}
+.error-screen.show{display:flex}
+.error-card{padding:16px;border:1px solid #1f2937;border-radius:4px;background:#09090b;max-width:28rem}
+.error-title{color:#ef4444;font-family:"JetBrains Mono",monospace;font-size:14px;margin:0 0 8px 0}
+.error-msg{color:#9ca3af;font-family:"JetBrains Mono",monospace;font-size:12px;line-height:1.625;margin:0}
+
+#butterfly{position:fixed;width:36px;height:36px;pointer-events:none;z-index:9999;
+  transform:translate(-50%,-50%);filter:drop-shadow(0 0 7px rgba(203,141,255,.75))}
+@media(max-width:768px){#butterfly{display:none}body{cursor:auto}}
+
+/* ===== 简历正文 ===== */
+.cv{position:relative;z-index:70;background:#000;padding:7rem 0 3rem}
+.cv-inner{max-width:920px;margin:0 auto;padding:0 2rem}
+.cv-kicker{font-family:"JetBrains Mono",monospace;font-size:10px;color:#CB8DFF;
+  text-transform:uppercase;letter-spacing:0.22em;text-align:center;margin:0 0 1rem 0}
+.cv-title{font-family:"Instrument Serif","Noto Serif SC",serif;font-size:clamp(2.4rem,5vw,4rem);
+  font-weight:400;color:#fff;text-align:center;margin:0 0 4rem 0;letter-spacing:-0.03em}
+.cv-sec{margin-bottom:5rem}
+.cv-sec h2{font-family:"Instrument Serif","Noto Serif SC",serif;font-size:clamp(1.7rem,3vw,2.5rem);
+  font-weight:400;color:#fff;margin:0 0 2rem 0;letter-spacing:-0.02em;
+  display:flex;align-items:center;gap:16px}
+.cv-sec h2 .num{font-family:"JetBrains Mono",monospace;font-size:11px;color:#CB8DFF;letter-spacing:0.15em}
+.cv-sec h2::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(203,141,255,.5),transparent)}
+.entry{background:rgba(255,255,255,.16);backdrop-filter:blur(80px);border:1px solid rgba(255,255,255,.15);
+  border-radius:0;padding:clamp(22px,2.2vw,34px);margin-bottom:14px;transform-style:preserve-3d;
+  transition:transform .35s,border-color .4s,box-shadow .4s;will-change:transform}
+.entry:hover{border-color:rgba(255,255,255,.45);
+  box-shadow:0 25px 60px rgba(0,0,0,.4),0 0 45px rgba(203,141,255,.07)}
+.entry h3{font-family:"Instrument Serif","Noto Serif SC",Georgia,serif;font-size:1.5rem;
+  font-weight:400;color:#fff;margin:0 0 6px 0;letter-spacing:-0.015em;transform:translateZ(24px)}
+.entry .meta{font-family:"JetBrains Mono",monospace;font-size:10px;color:#CB8DFF;
+  letter-spacing:0.12em;margin:0 0 14px 0;transform:translateZ(18px)}
+.entry ul{margin:0;padding-left:1.1rem;transform:translateZ(10px)}
+.entry li{font-family:"Manrope","Noto Serif SC",sans-serif;font-size:0.92rem;line-height:1.72;
+  color:rgba(255,255,255,.68);margin-bottom:6px;letter-spacing:0.01em}
+.entry li::marker{color:#CB8DFF}
+.entry li:last-child{margin-bottom:0}
+.hl{color:#22d3ee;font-weight:600}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;transform:translateZ(10px)}
+.tag{font-family:"Space Grotesk",sans-serif;font-size:11px;color:rgba(255,255,255,.75);
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);
+  border-radius:9999px;padding:5px 14px;transition:all .3s}
+.tag:hover{color:#CB8DFF;border-color:#CB8DFF}
+.lang-note{font-family:"Manrope","Noto Serif SC",sans-serif;font-size:0.88rem;
+  color:rgba(255,255,255,.64);margin-top:14px;transform:translateZ(10px)}
+.lang-note .exam{color:#22d3ee;font-weight:600}
+.cv-contact{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+footer{text-align:center;padding:3rem 2rem;color:rgba(255,255,255,.25);
+  font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:0.1em}
+</style>
+</head>
+<body>
+
+<div id="butterfly">
+  <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="wL" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#CB8DFF"/></linearGradient>
+      <linearGradient id="wR" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#CB8DFF"/><stop offset="100%" stop-color="#fff"/></linearGradient>
+      <radialGradient id="bd"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#CB8DFF"/></radialGradient>
+    </defs>
+    <path d="M20 8 C12 4, 4 10, 9 20 C13 28, 18 24, 20 18" fill="url(#wL)" opacity=".9"/>
+    <path d="M20 8 C28 4, 36 10, 31 20 C27 28, 22 24, 20 18" fill="url(#wR)" opacity=".9"/>
+    <path d="M20 18 C17 24, 13 32, 20 36 C27 32, 23 24, 20 18" fill="url(#wL)" opacity=".55"/>
+    <ellipse cx="20" cy="20" rx="1.8" ry="9" fill="url(#bd)"/>
+    <line x1="14" y1="12" x2="10" y2="6" stroke="#fff" stroke-width=".8" opacity=".6"/>
+    <line x1="26" y1="12" x2="30" y2="6" stroke="#fff" stroke-width=".8" opacity=".6"/>
+  </svg>
+</div>
+
+<div class="scroll-container" id="scrollContainer">
+  <div class="fixed-viewport" id="fixedViewport">
+
+    <div class="premium-brand-header" id="brandHeader">
+      <svg viewBox="0 0 49 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="premium-brand-logo-svg">
+        <g clip-path="url(#cb)">
+          <path d="M48.4404 17.6588C47.7017 15.3617 46.2569 13.3584 44.3131 11.9362C42.3693 10.5141 40.0265 9.74617 37.6207 9.74268H37.0462C37.1235 10.2805 37.164 10.8231 37.1676 11.3665C37.1628 14.3622 36.0924 17.2579 34.1489 19.5323C32.2054 21.8066 29.5166 23.3102 26.5664 23.7724C26.6392 24.0729 26.7121 24.3733 26.8092 24.6655C26.9904 25.2224 27.2122 25.7651 27.4728 26.2894L27.4728 26.3543C27.5942 26.5898 27.7236 26.8252 27.8612 27.0526L27.9178 27.15C28.3242 27.8128 28.796 28.433 29.3259 29.0011L29.5687 29.2609L29.9652 29.6263C30.0866 29.74 30.2161 29.8536 30.3537 29.9592L30.7098 30.2515C30.8797 30.3814 31.0577 30.5032 31.2358 30.625L31.5595 30.8523C31.8508 31.0309 32.1502 31.2095 32.4577 31.3638C33.787 32.0468 35.2378 32.4594 36.7266 32.5778C38.2154 32.6963 39.7129 32.5182 41.1329 32.0539C41.4083 31.9667 41.6785 31.8637 41.9421 31.7454C44.6033 30.6611 46.7546 28.6033 47.961 25.9882C49.1674 23.3731 49.3387 20.3958 48.4404 17.6588Z" fill="white"/>
+          <path d="M41.4966 33.1341C40.2425 33.5456 38.9316 33.7566 37.6122 33.7593C35.2977 33.7531 33.0303 33.1034 31.0617 31.8822C29.0931 30.6611 27.5005 28.9163 26.4607 26.8418C26.1937 27.0042 25.9428 27.1747 25.6515 27.3614C25.1901 27.702 24.7546 28.0765 24.3486 28.4819L24.3 28.5306C24.1058 28.7173 23.9278 28.9122 23.7497 29.1151L23.685 29.1963C23.1783 29.7906 22.7336 30.4354 22.3578 31.1206C22.3012 31.2261 22.2445 31.3235 22.196 31.4291C22.1474 31.5346 22.0341 31.7538 21.9613 31.9162C21.8885 32.0786 21.8237 32.2329 21.7671 32.3952C21.7104 32.5576 21.6538 32.6794 21.6052 32.8256C21.5567 32.9717 21.4677 33.2315 21.411 33.4345C21.3544 33.6375 21.3382 33.6699 21.3139 33.7917C21.2236 34.1255 21.1534 34.4644 21.1035 34.8066C20.8672 36.2866 20.9251 37.7989 21.2737 39.2564C21.6223 40.7139 22.2548 42.0879 23.1347 43.2992C23.2966 43.5184 23.4746 43.7376 23.6526 43.9406C25.3534 46.0837 27.7685 47.5385 30.4534 48.0372C33.1384 48.045 35.9125 48.045 38.2653 46.6547C40.6181 45.2645 42.3913 43.0685 43.2586 40.4708C44.1259 37.8732 44.029 35.0487 42.9856 32.517C42.5042 32.7574 42.0067 32.9636 41.4966 33.1341Z" fill="white"/>
+          <path d="M20.0045 34.6197C20.4175 31.9862 21.6629 29.5556 23.5571 27.686C23.3224 27.4912 23.0796 27.2882 22.8287 27.1096C21.2988 25.9892 19.5119 25.2743 17.6334 25.0311H17.3987C16.9941 24.9905 16.5894 24.958 16.1686 24.958C14.3714 24.962 12.6002 25.3895 10.9978 26.206C9.39542 27.0226 8.00658 28.2053 6.9432 29.659C6.78135 29.8863 6.63568 30.1217 6.49002 30.3572C5.03583 32.6434 4.4443 35.3759 4.82225 38.0613C5.2002 40.7467 6.52271 43.208 8.55098 45.0008C10.5793 46.7937 13.1796 47.7998 15.8825 47.8376C18.5854 47.8754 21.2127 46.9424 23.29 45.207C22.9121 44.8221 22.5632 44.4096 22.2461 43.9729C21.2738 42.6404 20.575 41.1275 20.1902 39.5219C19.8054 37.9163 19.7423 36.25 20.0045 34.6197Z" fill="white"/>
+          <path d="M6.01393 28.9525C7.76739 26.527 10.3287 24.8119 13.234 24.1178C16.1392 23.4238 19.1961 23.7967 21.8509 25.169C21.9723 24.8848 22.0856 24.6006 22.1827 24.3002C22.7183 22.6659 22.8815 20.9318 22.6602 19.2258V18.9903C22.6602 18.7955 22.5873 18.6006 22.5469 18.4139C22.5064 18.2271 22.4821 18.1054 22.4417 17.9592C22.4012 17.8131 22.3608 17.6426 22.3122 17.4802C22.2636 17.3178 22.1827 17.0905 22.118 16.8956C22.0532 16.7008 22.029 16.652 21.9804 16.5384C21.8586 16.2165 21.7181 15.902 21.5596 15.5966C20.8885 14.2565 19.9583 13.0639 18.8232 12.0881C17.6881 11.1124 16.3708 10.3731 14.948 9.91321C14.6972 9.83202 14.4544 9.76706 14.2035 9.71023C13.2994 9.47628 12.3696 9.35628 11.4359 9.35299C8.9636 9.30745 6.54433 10.0747 4.54726 11.5375C2.55019 13.0004 1.08498 15.0786 0.375205 17.4551C-0.334567 19.8315 -0.249922 22.3757 0.616224 24.6993C1.48237 27.023 3.08245 28.9986 5.17231 30.3246C5.42183 29.8488 5.70301 29.3904 6.01393 28.9525Z" fill="white"/>
+          <path d="M22.5278 15.0688C23.735 17.4435 24.1546 20.143 23.7255 22.7738C24.025 22.7738 24.3325 22.8225 24.6481 22.8225C25.2227 22.8148 25.796 22.766 26.3637 22.6764C28.9618 22.273 31.3392 20.9756 33.0885 19.0065L33.2585 18.8198C33.4041 18.6493 33.5417 18.4707 33.6793 18.2839C33.8169 18.0972 33.833 18.0891 33.9059 17.9835C33.9787 17.878 34.1406 17.6425 34.2458 17.472C34.351 17.3015 34.4076 17.2122 34.4804 17.0823C34.5533 16.9524 34.6666 16.7575 34.7475 16.587C34.8284 16.4165 34.9013 16.2785 34.9741 16.1243C35.0469 15.97 35.1117 15.8076 35.1845 15.6452C35.2573 15.4829 35.314 15.2961 35.3706 15.1175C35.4273 14.9389 35.4839 14.8008 35.5325 14.6466C35.581 14.4923 35.6377 14.2488 35.6862 14.0458C35.7348 13.8428 35.7591 13.7535 35.7833 13.6073C35.8076 13.4612 35.8643 13.1364 35.8966 12.8929C35.929 12.6493 35.8966 12.6493 35.9452 12.5194C35.9452 12.154 36.0018 11.7887 36.0018 11.4071V10.5952C35.8453 7.88465 34.727 5.31985 32.8491 3.36487C30.9712 1.40989 28.4579 0.193859 25.7639 -0.0631835C23.0699 -0.320226 20.3731 0.398699 18.1616 1.96351C15.9501 3.52831 14.37 5.83563 13.707 8.46797C14.2332 8.56239 14.7523 8.69259 15.2608 8.85768C16.8205 9.36099 18.2656 10.1689 19.5128 11.2349C20.76 12.3008 21.7847 13.6038 22.5278 15.0688Z" fill="white"/>
+        </g>
+        <defs><clipPath id="cb"><rect width="49" height="48" fill="white"/></clipPath></defs>
+      </svg>
+      <span class="premium-brand-text">罗铃泉 <span class="accent">Lingquan</span></span>
+    </div>
+
+    <header class="premium-header-nav" id="navHeader">
+      <nav class="premium-nav-desktop">
+        <ul class="premium-nav-list">
+          <li class="premium-nav-item"><a href="#top" class="premium-nav-link">首页</a></li>
+          <li class="premium-nav-item"><a href="#cv-experience" class="premium-nav-link">经历</a></li>
+          <li class="premium-nav-item"><a href="#cv-projects" class="premium-nav-link">项目</a></li>
+          <li class="premium-nav-item"><a href="#cv-skills" class="premium-nav-link">技能</a></li>
+          <li class="premium-nav-item"><a href="#cv-contact" class="premium-nav-link">联系</a></li>
+        </ul>
+      </nav>
+      <button class="premium-hamburger" id="hamburgerBtn" aria-label="Open menu">
+        <span class="premium-hamburger-line" id="hLine1"></span>
+        <span class="premium-hamburger-line" id="hLine2"></span>
+        <span class="premium-hamburger-line" id="hLine3"></span>
+      </button>
+    </header>
+
+    <div class="premium-mobile-menu" id="mobileMenu">
+      <nav><ul class="premium-mobile-menu-list">
+        <li><a href="#top" class="premium-mobile-menu-link mobile-link">首页</a></li>
+        <li><a href="#cv-experience" class="premium-mobile-menu-link mobile-link">经历</a></li>
+        <li><a href="#cv-projects" class="premium-mobile-menu-link mobile-link">项目</a></li>
+        <li><a href="#cv-campus" class="premium-mobile-menu-link mobile-link">校园</a></li>
+        <li><a href="#cv-skills" class="premium-mobile-menu-link mobile-link">技能</a></li>
+        <li><a href="#cv-contact" class="premium-mobile-menu-link mobile-link">联系</a></li>
+      </ul></nav>
+    </div>
+
+    <!-- ★ 3D 土星头像（首屏主角，CSS-only） -->
+    
+<div class="hero3d" id="hero3d">
+  <div class="hero3d-scene">
+    <div class="hero3d-planet">
+      <img class="hero3d-face" src="data:image/jpeg;base64,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" alt="罗铃泉">
+      <div class="hero3d-aura"></div>
+      <div class="hero3d-crater hero3d-crater-1"></div>
+      <div class="hero3d-crater hero3d-crater-2"></div>
+    </div>
+    <div class="hero3d-ring hero3d-ring-1"></div>
+    <div class="hero3d-ring hero3d-ring-2"></div>
+    <div class="hero3d-ring hero3d-ring-3"></div>
+    <div class="hero3d-satellite"></div>
+    <div class="hero3d-glow"></div>
+  </div>
+</div>
+
+
+    <!-- Hero 文字卡 -->
+    <div class="premium-botanical-card" id="botanicalCard">
+      <p class="premium-card-meta">Growth · Bilingual · Cross-Culture</p>
+      <h2 class="premium-card-title">罗铃泉 <span class="italic">Lingquan</span></h2>
+      <p class="premium-card-subtext">增长运营 × 全栈双语 × 跨文化协作。以 AI 驱动内容生产，以五语搭建连接，在 0→1 的每一步里跑通可复制的路径。</p>
+      <button class="premium-action-circle" id="ctaBtn" aria-label="开始探索">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 40 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M29.5 4.5L37 12m0 0l-7.5 7.5M37 12H3"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="premium-features-container" id="featuresContainer" style="visibility:hidden">
+      <div class="premium-feature-card" id="fCard1" style="opacity:0">
+        <div class="premium-feature-icon-wrapper"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/></svg></div>
+        <h3 class="premium-feature-title">增长运营</h3>
+        <p class="premium-feature-desc">搭建爆款内容流水线，运营效率提升 50%+；驱动用户增长 10w+，完成 300+ 用户深度洞察反哺产品迭代。</p>
+      </div>
+      <div class="premium-feature-card" id="fCard2" style="opacity:0">
+        <div class="premium-feature-icon-wrapper"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v18m9-9H3m14.5-4.5l-11 11m11 0l-11-11"/></svg></div>
+        <h3 class="premium-feature-title">全栈双语</h3>
+        <p class="premium-feature-desc">中英西德法五语能力。CATTI 笔译三级 · DET 120（雅思 7.0），深耕交替传译、官方文书与 SSCI 编译。</p>
+      </div>
+      <div class="premium-feature-card" id="fCard3" style="opacity:0">
+        <div class="premium-feature-icon-wrapper"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16 3L7 12h12l-6 9"/></svg></div>
+        <h3 class="premium-feature-title">跨文化协作</h3>
+        <p class="premium-feature-desc">从零搭建海外客户开发 SOP，跑通 B 端销售闭环；跨时区英文沟通，对接供应链与文化机构。</p>
+      </div>
+    </div>
+
+    <div class="mission-container" id="missionContainer" style="visibility:hidden">
+      <div class="mission-inner">
+        <div class="mission-para" id="mPara1" style="opacity:0">以 <span class="mission-pill">增长</span> 为引擎，把内容流水线与用户洞察，压进每一次可复制的爆发。</div>
+        <div class="mission-para" id="mPara2" style="opacity:0">以 <span class="mission-pill">五语</span> 为桥，在跨文化的缝隙里，搭建信任、共识与真实的连接。</div>
+        <div class="mission-para" id="mPara3" style="opacity:0">以 <span class="mission-pill">0→1</span> 为路径，从 AI 数字产品到海外商务，把想法跑成完整的闭环。</div>
+      </div>
+    </div>
+
+    <div class="feedback-container" id="feedbackContainer" style="visibility:hidden">
+      <div class="feedback-form-card" id="feedbackForm" style="opacity:0">
+        <svg viewBox="0 0 49 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="fb-logo">
+          <g clip-path="url(#cf)">
+            <path d="M48.4404 17.6588C47.7017 15.3617 46.2569 13.3584 44.3131 11.9362C42.3693 10.5141 40.0265 9.74617 37.6207 9.74268H37.0462C37.1235 10.2805 37.164 10.8231 37.1676 11.3665C37.1628 14.3622 36.0924 17.2579 34.1489 19.5323C32.2054 21.8066 29.5166 23.3102 26.5664 23.7724C26.6392 24.0729 26.7121 24.3733 26.8092 24.6655C26.9904 25.2224 27.2122 25.7651 27.4728 26.2894L27.4728 26.3543C27.5942 26.5898 27.7236 26.8252 27.8612 27.0526L27.9178 27.15C28.3242 27.8128 28.796 28.433 29.3259 29.0011L29.5687 29.2609L29.9652 29.6263C30.0866 29.74 30.2161 29.8536 30.3537 29.9592L30.7098 30.2515C30.8797 30.3814 31.0577 30.5032 31.2358 30.625L31.5595 30.8523C31.8508 31.0309 32.1502 31.2095 32.4577 31.3638C33.787 32.0468 35.2378 32.4594 36.7266 32.5778C38.2154 32.6963 39.7129 32.5182 41.1329 32.0539C41.4083 31.9667 41.6785 31.8637 41.9421 31.7454C44.6033 30.6611 46.7546 28.6033 47.961 25.9882C49.1674 23.3731 49.3387 20.3958 48.4404 17.6588Z" fill="white"/>
+            <path d="M41.4966 33.1341C40.2425 33.5456 38.9316 33.7566 37.6122 33.7593C35.2977 33.7531 33.0303 33.1034 31.0617 31.8822C29.0931 30.6611 27.5005 28.9163 26.4607 26.8418C26.1937 27.0042 25.9428 27.1747 25.6515 27.3614C25.1901 27.702 24.7546 28.0765 24.3486 28.4819L24.3 28.5306C24.1058 28.7173 23.9278 28.9122 23.7497 29.1151L23.685 29.1963C23.1783 29.7906 22.7336 30.4354 22.3578 31.1206C22.3012 31.2261 22.2445 31.3235 22.196 31.4291C22.1474 31.5346 22.0341 31.7538 21.9613 31.9162C21.8885 32.0786 21.8237 32.2329 21.7671 32.3952C21.7104 32.5576 21.6538 32.6794 21.6052 32.8256C21.5567 32.9717 21.4677 33.2315 21.411 33.4345C21.3544 33.6375 21.3382 33.6699 21.3139 33.7917C21.2236 34.1255 21.1534 34.4644 21.1035 34.8066C20.8672 36.2866 20.9251 37.7989 21.2737 39.2564C21.6223 40.7139 22.2548 42.0879 23.1347 43.2992C23.2966 43.5184 23.4746 43.7376 23.6526 43.9406C25.3534 46.0837 27.7685 47.5385 30.4534 48.0372C33.1384 48.045 35.9125 48.045 38.2653 46.6547C40.6181 45.2645 42.3913 43.0685 43.2586 40.4708C44.1259 37.8732 44.029 35.0487 42.9856 32.517C42.5042 32.7574 42.0067 32.9636 41.4966 33.1341Z" fill="white"/>
+            <path d="M20.0045 34.6197C20.4175 31.9862 21.6629 29.5556 23.5571 27.686C23.3224 27.4912 23.0796 27.2882 22.8287 27.1096C21.2988 25.9892 19.5119 25.2743 17.6334 25.0311H17.3987C16.9941 24.9905 16.5894 24.958 16.1686 24.958C14.3714 24.962 12.6002 25.3895 10.9978 26.206C9.39542 27.0226 8.00658 28.2053 6.9432 29.659C6.78135 29.8863 6.63568 30.1217 6.49002 30.3572C5.03583 32.6434 4.4443 35.3759 4.82225 38.0613C5.2002 40.7467 6.52271 43.208 8.55098 45.0008C10.5793 46.7937 13.1796 47.7998 15.8825 47.8376C18.5854 47.8754 21.2127 46.9424 23.29 45.207C22.9121 44.8221 22.5632 44.4096 22.2461 43.9729C21.2738 42.6404 20.575 41.1275 20.1902 39.5219C19.8054 37.9163 19.7423 36.25 20.0045 34.6197Z" fill="white"/>
+            <path d="M6.01393 28.9525C7.76739 26.527 10.3287 24.8119 13.234 24.1178C16.1392 23.4238 19.1961 23.7967 21.8509 25.169C21.9723 24.8848 22.0856 24.6006 22.1827 24.3002C22.7183 22.6659 22.8815 20.9318 22.6602 19.2258V18.9903C22.6602 18.7955 22.5873 18.6006 22.5469 18.4139C22.5064 18.2271 22.4821 18.1054 22.4417 17.9592C22.4012 17.8131 22.3608 17.6426 22.3122 17.4802C22.2636 17.3178 22.1827 17.0905 22.118 16.8956C22.0532 16.7008 22.029 16.652 21.9804 16.5384C21.8586 16.2165 21.7181 15.902 21.5596 15.5966C20.8885 14.2565 19.9583 13.0639 18.8232 12.0881C17.6881 11.1124 16.3708 10.3731 14.948 9.91321C14.6972 9.83202 14.4544 9.76706 14.2035 9.71023C13.2994 9.47628 12.3696 9.35628 11.4359 9.35299C8.9636 9.30745 6.54433 10.0747 4.54726 11.5375C2.55019 13.0004 1.08498 15.0786 0.375205 17.4551C-0.334567 19.8315 -0.249922 22.3757 0.616224 24.6993C1.48237 27.023 3.08245 28.9986 5.17231 30.3246C5.42183 29.8488 5.70301 29.3904 6.01393 28.9525Z" fill="white"/>
+            <path d="M22.5278 15.0688C23.735 17.4435 24.1546 20.143 23.7255 22.7738C24.025 22.7738 24.3325 22.8225 24.6481 22.8225C25.2227 22.8148 25.796 22.766 26.3637 22.6764C28.9618 22.273 31.3392 20.9756 33.0885 19.0065L33.2585 18.8198C33.4041 18.6493 33.5417 18.4707 33.6793 18.2839C33.8169 18.0972 33.833 18.0891 33.9059 17.9835C33.9787 17.878 34.1406 17.6425 34.2458 17.472C34.351 17.3015 34.4076 17.2122 34.4804 17.0823C34.5533 16.9524 34.6666 16.7575 34.7475 16.587C34.8284 16.4165 34.9013 16.2785 34.9741 16.1243C35.0469 15.97 35.1117 15.8076 35.1845 15.6452C35.2573 15.4829 35.314 15.2961 35.3706 15.1175C35.4273 14.9389 35.4839 14.8008 35.5325 14.6466C35.581 14.4923 35.6377 14.2488 35.6862 14.0458C35.7348 13.8428 35.7591 13.7535 35.7833 13.6073C35.8076 13.4612 35.8643 13.1364 35.8966 12.8929C35.929 12.6493 35.8966 12.6493 35.9452 12.5194C35.9452 12.154 36.0018 11.7887 36.0018 11.4071V10.5952C35.8453 7.88465 34.727 5.31985 32.8491 3.36487C30.9712 1.40989 28.4579 0.193859 25.7639 -0.0631835C23.0699 -0.320226 20.3731 0.398699 18.1616 1.96351C15.9501 3.52831 14.37 5.83563 13.707 8.46797C14.2332 8.56239 14.7523 8.69259 15.2608 8.85768C16.8205 9.36099 18.2656 10.1689 19.5128 11.2349C20.76 12.3008 21.7847 13.6038 22.5278 15.0688Z" fill="white"/>
+          </g>
+          <defs><clipPath id="cf"><rect width="49" height="48" fill="white"/></clipPath></defs>
+        </svg>
+        <h3 class="fb-title">Let's build together</h3>
+        <p class="fb-sub">Growth · Bilingual · Cross-Culture</p>
+        <div class="ct-grid">
+          <div class="ct-item"><div class="ct-label">Email</div><a class="ct-value" href="mailto:chrystalola@icloud.com">chrystalola@icloud.com</a></div>
+          <div class="ct-item"><div class="ct-label">WeChat</div><button class="ct-copy" onclick="copyWechat(this)">Chrystal_007</button></div>
+          <div class="ct-item"><div class="ct-label">LinkedIn</div><a class="ct-value" href="https://www.linkedin.com/in/lingquanluo" target="_blank" rel="noopener">/lingquanluo</a></div>
+          <div class="ct-item"><div class="ct-label">Linktree</div><a class="ct-value" href="https://linktr.ee/chrystaluck" target="_blank" rel="noopener">/chrystaluck</a></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-wrapper" id="bgWrapper">
+      <video id="v1" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/cloudinarry%20to%20cloudflare/202606101700_hglz7q.mp4" preload="auto" muted playsinline></video>
+      <video id="v2" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/cloudinarry%20to%20cloudflare/202606101702_sd50y0.mp4" preload="auto" muted playsinline></video>
+      <video id="v3" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/cloudinarry%20to%20cloudflare/202606101703_jmidj2.mp4" preload="auto" muted playsinline></video>
+      <canvas id="mainCanvas"></canvas>
+    </div>
+
+    <div class="loading-screen" id="loadingScreen">
+      <svg class="loading-spinner" viewBox="0 0 64 64" style="transform:rotate(-90deg)">
+        <circle cx="32" cy="32" r="28" stroke="#1f2937" stroke-width="2" fill="transparent"/>
+        <circle cx="32" cy="32" r="28" stroke="#fff" stroke-width="3" fill="transparent" stroke-dasharray="176" stroke-dashoffset="132" stroke-linecap="round"/>
+      </svg>
+      <p class="loading-text">Loading experience</p>
+    </div>
+    <div class="error-screen" id="errorScreen">
+      <div class="error-card">
+        <p class="error-title">Video Load Error</p>
+        <p class="error-msg">正在使用程序化背景，内容不受影响。</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<main class="cv" id="top">
+  <div class="cv-inner">
+    <p class="cv-kicker">Curriculum Vitae</p>
+    <h1 class="cv-title">罗铃泉 · Lingquan Luo</h1>
+
+    <section class="cv-sec" id="cv-experience">
+      <h2><span class="num">01</span> 工作经历</h2>
+      <div class="entry">
+        <h3>炫图AI · 增长运营</h3>
+        <p class="meta">2024.06 — 至今</p>
+        <ul>
+<li>从 0 到 1 搭建 AI 绘图工具的内容增长体系，独立负责小红书 / 公众号 / 抖音三端内容矩阵，单月自然流量涨粉 <span class="hl">3w+</span>。</li>
+<li>建立爆款内容流水线：选题库 → 脚本模板 → A/B 封面 → 数据复盘，将单条内容平均产出工时从 <span class="hl">4h 压缩至 1.5h</span>（效率 <span class="hl">+50%</span>）。</li>
+<li>主导裂变活动策划，设计「邀请-解锁」增长闭环，驱动产品累计用户增长 <span class="hl">10w+</span>。</li>
+<li>搭建竞品监控看板（Notion + 飞书多维表格），覆盖 20+ 竞品日更数据，分析效率提升 <span class="hl">60%</span>。</li>
+<li>完成 <span class="hl">300+</span> 条用户深度访谈与问卷，沉淀用户画像反哺产品功能迭代。</li>
+<li>跨部门协同（产品 / 算法 / 设计），推动「提示词社区」核心功能从需求到上线。</li>
+        </ul>
+      </div>
+      <div class="entry">
+        <h3>QUICK ART · 艺术影像社群运营（远程）</h3>
+        <p class="meta">2026.03 — 至今</p>
+        <ul>
+<li>独立运营视觉艺术 / 摄影垂直社群，围绕影像美学策划内容专题，社群活跃度提升 <span class="hl">40%</span>。</li>
+<li>策划并落地「视觉艺术特别企划」系列，涵盖艺术家专访、主题征稿、线上影展，累计触达 <span class="hl">500+</span> 人。</li>
+<li>负责公众号内容编辑与发布，建立标准化内容生产 SOP，保证周更稳定输出。</li>
+<li>对接艺术家资源，独立完成投稿筛选、版权沟通、排期协调全流程。</li>
+        </ul>
+      </div>
+      <div class="entry">
+        <h3>独立海外商务开发与采购代理 · 主理人（自主商业实践）</h3>
+        <p class="meta">2026.05 — 至今</p>
+        <ul>
+<li>通过 LinkedIn / 邮件 / Facebook 自主开发英语国家及欧洲市场 B 端客户，累计触达 <span class="hl">200+</span> 潜在客户。</li>
+<li>对接国内工厂，跑通询价 → 供应商筛选 → 样品确认 → 交期管控全链路采购流程。</li>
+<li>独立处理跨时区英文商务沟通（邮件 / WhatsApp / Zoom），单笔订单最高客单价 <span class="hl">\$8k</span>。</li>
+<li>从零沉淀客户开发 SOP 与话术库，形成可复用的海外获客方法论。</li>
+        </ul>
+      </div>
+      <div class="entry">
+        <h3>Gumroad · AI 数字产品创作者（独立项目）</h3>
+        <p class="meta">2026.05 — 至今</p>
+        <ul>
+<li>制作 AI 辅助数字产品：中国旅行指南、商务汉语教学课件、视觉素材包。</li>
+<li>深度使用 Gemini / ChatGPT 等工具，生产效率提升至传统模式的 <span class="hl">3-5 倍</span>。</li>
+<li>独立完成产品页搭建、定价策略、支付链路（Stripe）与自动化交付流程。</li>
+<li>零成本社交媒体 + SEO 内容营销，跑通微型商业闭环。</li>
+        </ul>
+      </div>
+      <div class="entry">
+        <h3>Maverick 特立独行青年社区 · 内容编辑与人物专访（远程）</h3>
+        <p class="meta">2025.05 — 2026.01</p>
+        <ul>
+<li>聚焦志愿者经历、求职内推、青年职业发展三大内容方向。</li>
+<li>独立完成 <span class="hl">5 篇</span> 人物专访全流程：背景调研 → 提纲拟定 → 深度访谈 → 稿件编写 → 排版发布。</li>
+<li>单篇平均阅读量 <span class="hl">150+</span>，最高 <span class="hl">400+</span>；参与稿件审校与质量控制。</li>
+<li>协助搭建社区内容规范，培训新晋编辑 2 名。</li>
+        </ul>
+      </div>
+      <div class="entry">
+        <h3>商务部研修基地 · 翻译与项目统筹</h3>
+        <p class="meta">2023.09 — 2024.05</p>
+        <ul>
+<li>承担课堂实地交替传译与同传支持，累计口译时长 <span class="hl">200+</span> 小时。</li>
+<li>统筹 <span class="hl">30+</span> 名外籍学员在华日常事务（签证 / 住宿 / 行程）。</li>
+<li>独立执行国际会务全流程：策划 → 邀约 → 现场同传 → 纪要归档。</li>
+<li>负责绿色经济 / 清洁能源方向官方文书翻译与 SSCI 外刊编译。</li>
+        </ul>
+      </div>
+      <div class="entry">
+        <h3>OPPO · PDA 项目助理</h3>
+        <p class="meta">2023.06 — 2023.08</p>
+        <ul>
+<li>接待 <span class="hl">30+</span> 位国际来宾，提供中英双语现场翻译支持。</li>
+<li>获执行组长口头嘉奖；在高压多线程环境下精准预判需求。</li>
+<li>协助项目进度管理与跨部门资源协调。</li>
+        </ul>
+      </div>
+      <div class="entry">
+        <h3>菲律宾旅游局 · 翻译实习生</h3>
+        <p class="meta">2022.06 — 2022.08</p>
+        <ul>
+<li>承担官方宣传材料的笔译校对与本土化改写。</li>
+<li>提供文旅行业交替传译支持，熟悉外事礼仪规范。</li>
+        </ul>
+      </div>
+      <div class="entry">
+        <h3>大外交智库 · 编译与研究员</h3>
+        <p class="meta">2021.09 — 2022.06</p>
+        <ul>
+<li>负责 SSCI 外刊编译与政策评议，产出编译稿件 <span class="hl">20+</span> 篇。</li>
+<li>深耕拉美地缘政治研究，参与学者圆桌讨论组织。</li>
+        </ul>
+      </div>
+      <div class="entry">
+        <h3>Shestays · 数据运营</h3>
+        <p class="meta">2021.03 — 2021.08</p>
+        <ul>
+<li>维护女性出行安全数据库，数据准确率 <span class="hl">99%+</span>。</li>
+<li>英文主持数据周会 <span class="hl">10+</span> 场，协调跨国志愿者团队。</li>
+<li>引入 Notion AI 优化数据运营流程，节省工时 <span class="hl">30%</span>。</li>
+        </ul>
+      </div>
+      <div class="entry">
+        <h3>兼职口译 · 自由译员</h3>
+        <p class="meta">2020 — 至今</p>
+        <ul>
+<li>服务场景覆盖广交会 / 银联国际 / 赛艇赛事 / 机器人中心技术口译。</li>
+<li>覆盖英 ⇄ 中、西 ⇄ 中双向交替传译，累计自由职业收入 <span class="hl">\$5k+</span>。</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="cv-sec" id="cv-projects">
+      <h2><span class="num">02</span> 项目与校园</h2>
+      <div class="entry">
+        <h3>抖音知识类 IP 账号运营</h3>
+        <p class="meta">校园项目 · 自主孵化</p>
+        <ul>
+<li>独立策划并制作短视频 <span class="hl">200+</span> 条，覆盖人文社科与语言学习方向。</li>
+<li>累计获赞 <span class="hl">25.9w+</span>，单条最高播放 <span class="hl">50w+</span>。</li>
+<li>研究平台推荐算法，持续优化选题策略与发布节奏，跑通内容创作全流程。</li>
+        </ul>
+      </div>
+      <div class="entry">
+        <h3>世界公民年 · 青年发展项目</h3>
+        <p class="meta">校园项目</p>
+        <ul>
+<li>参与国际青年发展项目，策划并执行跨文化线上交流活动 <span class="hl">6 场</span>。</li>
+<li>协调多方资源（高校 / NGO / 企业），推动项目按期落地。</li>
+        </ul>
+      </div>
+      <div class="entry">
+        <h3>特立独行公众号 · 内容运营</h3>
+        <p class="meta">校园项目</p>
+        <ul>
+<li>负责公众号内容策划、撰写与排版，产出原创稿件 <span class="hl">30+</span> 篇。</li>
+<li>积累青年社群影响力，单篇最高阅读 <span class="hl">1k+</span>。</li>
+        </ul>
+      </div>
+      <div class="entry">
+        <h3>北京大学出版社 · 合作项目</h3>
+        <p class="meta">校园项目</p>
+        <ul>
+<li>参与图书选题策划与市场调研，撰写竞品分析报告。</li>
+<li>协助内容编辑与校对工作，熟悉出版全流程。</li>
+        </ul>
+      </div>
+      <div class="entry">
+        <h3>博物馆 / 文化机构 · 讲解志愿者</h3>
+        <p class="meta">校园项目</p>
+        <ul>
+<li>承担公众讲解与跨文化沟通，累计志愿服务 <span class="hl">200+</span> 小时。</li>
+<li>显著提升知识整合与公开表达能力。</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="cv-sec" id="cv-skills">
+      <h2><span class="num">03</span> 能力技能</h2>
+      <div class="entry">
+        <h3>语言与编译</h3>
+        <div class="tags">
+          <span class="tag">中文（母语）</span>
+          <span class="tag">英语</span>
+          <span class="tag">德语 B1</span>
+          <span class="tag">法语 B1</span>
+          <span class="tag">西班牙语（日常）</span>
+          <span class="tag">交替传译</span>
+          <span class="tag">SSCI 编译</span>
+        </div>
+        <p class="lang-note">英语：<span class="exam">CATTI 笔译三级</span> · DET 考试 120 分（对应雅思 7.0）</p>
+      </div>
+      <div class="entry">
+        <h3>AI 与内容工具</h3>
+        <div class="tags"><span class="tag">Gemini</span><span class="tag">ChatGPT</span><span class="tag">剪映</span><span class="tag">Notion AI</span><span class="tag">公众号运营</span></div>
+      </div>
+      <div class="entry">
+        <h3>数据办公</h3>
+        <div class="tags"><span class="tag">Excel</span><span class="tag">增长分析</span><span class="tag">用户洞察</span><span class="tag">数据可视化</span></div>
+      </div>
+      <div class="entry">
+        <h3>设计与编辑</h3>
+        <div class="tags"><span class="tag">视觉排版</span><span class="tag">品牌审美</span><span class="tag">内容策划</span></div>
+      </div>
+      <div class="entry">
+        <h3>跨国协作</h3>
+        <div class="tags"><span class="tag">跨时区协作</span><span class="tag">跨文化沟通</span><span class="tag">0→1 创业</span><span class="tag">B 端客户开发</span><span class="tag">供应链对接</span></div>
+      </div>
+    </section>
+
+    <section class="cv-sec" id="cv-contact">
+      <h2><span class="num">04</span> 联系我</h2>
+      <div class="cv-contact">
+        <div class="ct-item"><div class="ct-label">Email</div><a class="ct-value" href="mailto:chrystalola@icloud.com">chrystalola@icloud.com</a></div>
+        <div class="ct-item"><div class="ct-label">WeChat</div><button class="ct-copy" onclick="copyWechat(this)">Chrystal_007</button></div>
+        <div class="ct-item"><div class="ct-label">LinkedIn</div><a class="ct-value" href="https://www.linkedin.com/in/lingquanluo" target="_blank" rel="noopener">/lingquanluo</a></div>
+        <div class="ct-item"><div class="ct-label">Linktree</div><a class="ct-value" href="https://linktr.ee/chrystaluck" target="_blank" rel="noopener">/chrystaluck</a></div>
+      </div>
+    </section>
+  </div>
+  <footer>© 2026 LINGQUAN LUO · 罗铃泉</footer>
+</main>
+
+<script>
+(function(){
+  var container=document.getElementById('scrollContainer');
+  var viewport=document.getElementById('fixedViewport');
+  var videos={v1:document.getElementById('v1'),v2:document.getElementById('v2'),v3:document.getElementById('v3')};
+  var canvas=document.getElementById('mainCanvas');
+  var bgWrapper=document.getElementById('bgWrapper');
+  var brandHeader=document.getElementById('brandHeader');
+  var navHeader=document.getElementById('navHeader');
+  var botanicalCard=document.getElementById('botanicalCard');
+  var featuresContainer=document.getElementById('featuresContainer');
+  var fCard1=document.getElementById('fCard1'),fCard2=document.getElementById('fCard2'),fCard3=document.getElementById('fCard3');
+  var missionContainer=document.getElementById('missionContainer');
+  var mPara1=document.getElementById('mPara1'),mPara2=document.getElementById('mPara2'),mPara3=document.getElementById('mPara3');
+  var feedbackContainer=document.getElementById('feedbackContainer');
+  var feedbackForm=document.getElementById('feedbackForm');
+  var loadingScreen=document.getElementById('loadingScreen');
+  var errorScreen=document.getElementById('errorScreen');
+
+  var targetProgress=0,currentProgress=0;
+  var durations={v1:0,v2:0,v3:0},metaLoaded={v1:false,v2:false,v3:false};
+  var seeking={v1:false,v2:false,v3:false},pendingSeek={v1:-1,v2:-1,v3:-1};
+  var offscreen=null,videoOK=true;
+
+  function getActiveKey(p){return p<=0.333?'v1':p<=0.666?'v2':'v3';}
+
+  function drawFrame(){
+    var p=currentProgress,key=getActiveKey(p),video=videos[key];
+    if(!video||video.readyState<2)return;
+    var dpr=window.devicePixelRatio||1,cW=canvas.width/dpr,cH=canvas.height/dpr;
+    if(cW===0||cH===0)return;
+    var vW=video.videoWidth||1920,vH=video.videoHeight||1080,vA=vW/vH,cA=cW/cH;
+    var dW=cW,dH=cH,oX=0,oY=0;
+    if(vA>cA){dW=cH*vA;oX=(cW-dW)/2;}else{dH=cW/vA;oY=(cH-dH)/2;}
+    if(!offscreen)offscreen=document.createElement('canvas');
+    if(offscreen.width!==canvas.width||offscreen.height!==canvas.height)
+      offscreen.width=canvas.width,offscreen.height=canvas.height;
+    var oc=offscreen.getContext('2d');if(!oc)return;
+    try{
+      oc.setTransform(dpr,0,0,dpr,0,0);oc.clearRect(0,0,cW,cH);oc.drawImage(video,oX,oY,dW,dH);
+      var ctx=canvas.getContext('2d');if(!ctx)return;
+      ctx.setTransform(1,0,0,1,0,0);ctx.drawImage(offscreen,0,0);
+    }catch(e){}
+  }
+
+  var stars=[],parts=[],t0=Date.now();
+  (function init(){
+    for(var i=0;i<170;i++)stars.push({x:Math.random(),y:Math.random(),r:Math.random()*1.3+0.2,a:Math.random()*0.7+0.2,v:Math.random()*0.00018+0.00004});
+    for(var j=0;j<52;j++)parts.push({x:Math.random(),y:Math.random(),r:Math.random()*2.2+0.6,a:Math.random()*0.4+0.1,vx:(Math.random()-0.5)*0.00022,vy:(Math.random()-0.5)*0.00022,ph:Math.random()*6.28});
+  })();
+  function mixCol(p){var s=[[34,211,238],[203,141,255],[236,72,153]],seg=p*(s.length-1),i=Math.min(s.length-2,Math.floor(seg)),f=seg-i,a=s[i],b=s[i+1];
+    return [Math.round(a[0]+(b[0]-a[0])*f),Math.round(a[1]+(b[1]-a[1])*f),Math.round(a[2]+(b[2]-a[2])*f)];}
+  function drawProcedural(){
+    var dpr=window.devicePixelRatio||1,W=canvas.width/dpr,H=canvas.height/dpr;
+    if(W===0||H===0)return;
+    var ctx=canvas.getContext('2d');if(!ctx)return;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    var now=(Date.now()-t0)/1000,p=currentProgress,col=mixCol(p),rgb=col[0]+','+col[1]+','+col[2];
+    ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);
+    var glows=[
+      {x:0.22+Math.sin(now*0.19)*0.06,y:0.28+Math.cos(now*0.23)*0.05,r:0.46,o:0.22,c:'34,211,238'},
+      {x:0.78+Math.cos(now*0.16)*0.06,y:0.70+Math.sin(now*0.21)*0.05,r:0.42,o:0.19,c:'203,141,255'},
+      {x:0.50+Math.sin(now*0.13+1.4)*0.08,y:0.50+Math.cos(now*0.17+0.6)*0.06,r:0.36,o:0.15,c:rgb}
+    ];
+    for(var g=0;g<glows.length;g++){var gl=glows[g],grd=ctx.createRadialGradient(gl.x*W,gl.y*H,0,gl.x*W,gl.y*H,gl.r*Math.max(W,H));
+      grd.addColorStop(0,'rgba('+gl.c+','+gl.o+')');grd.addColorStop(1,'rgba('+gl.c+',0)');
+      ctx.fillStyle=grd;ctx.fillRect(0,0,W,H);}
+    for(var i=0;i<stars.length;i++){var s=stars[i];s.y-=s.v;if(s.y<0)s.y=1;
+      ctx.beginPath();ctx.arc(s.x*W,s.y*H,s.r,0,6.2832);ctx.fillStyle='rgba(255,255,255,'+s.a+')';ctx.fill();}
+    for(var j=0;j<parts.length;j++){var pa=parts[j];pa.x+=pa.vx;pa.y+=pa.vy;
+      if(pa.x<0)pa.x=1;if(pa.x>1)pa.x=0;if(pa.y<0)pa.y=1;if(pa.y>1)pa.y=0;
+      var pu=0.6+0.4*Math.sin(now*1.6+pa.ph);
+      ctx.beginPath();ctx.arc(pa.x*W,pa.y*H,pa.r,0,6.2832);ctx.fillStyle='rgba('+rgb+','+(pa.a*pu)+')';ctx.fill();}
+  }
+
+  function handleResize(){
+    var parent=canvas.parentElement;if(!parent)return;
+    var dpr=window.devicePixelRatio||1,w=parent.clientWidth,h=parent.clientHeight;
+    canvas.width=w*dpr;canvas.height=h*dpr;canvas.style.width=w+'px';canvas.style.height=h+'px';
+    if(offscreen){offscreen.width=canvas.width;offscreen.height=canvas.height;}
+    if(videoOK)drawFrame();else drawProcedural();
+  }
+
+  function safeSeek(key,targetTime){
+    var video=videos[key];if(!video)return;
+    var dur=durations[key]||video.duration||10,clamped=Math.max(0,Math.min(targetTime,dur-0.05));
+    if(Math.abs(video.currentTime-clamped)<0.01)return;
+    if(seeking[key]){pendingSeek[key]=clamped;return;}
+    seeking[key]=true;pendingSeek[key]=-1;video.currentTime=clamped;
+  }
+
+  ['v1','v2','v3'].forEach(function(key){
+    var el=videos[key];if(!el)return;
+    el.addEventListener('seeked',function(){seeking[key]=false;
+      if(key===getActiveKey(currentProgress))drawFrame();
+      if(pendingSeek[key]>=0){var t=pendingSeek[key];pendingSeek[key]=-1;safeSeek(key,t);}});
+    function onMeta(){var d=el.duration;if(d&&!isNaN(d)&&d>0&&d!==Infinity){durations[key]=d;metaLoaded[key]=true;checkAllReady();}}
+    el.addEventListener('loadedmetadata',onMeta);
+    el.addEventListener('durationchange',onMeta);
+    el.addEventListener('canplay',onMeta);
+    el.addEventListener('error',function(){videoOK=false;errorScreen.classList.add('show');});
+    if(el.readyState>=1)onMeta();
+  });
+
+  function checkAllReady(){if(metaLoaded.v1&&metaLoaded.v2&&metaLoaded.v3)setTimeout(function(){loadingScreen.classList.add('hidden');handleResize();},100);}
+  setTimeout(function(){if(!(metaLoaded.v1&&metaLoaded.v2&&metaLoaded.v3)){videoOK=false;loadingScreen.classList.add('hidden');errorScreen.classList.add('show');setTimeout(function(){errorScreen.classList.remove('show');},2600);handleResize();}},6000);
+  setTimeout(function(){loadingScreen.classList.add('hidden');if(!(metaLoaded.v1&&metaLoaded.v2&&metaLoaded.v3))videoOK=false;handleResize();},1600);
+  window.addEventListener('resize',handleResize);
+
+  window.addEventListener('mousemove',function(e){
+    var x=(e.clientX-window.innerWidth/2)/(window.innerWidth/2),y=(e.clientY-window.innerHeight/2)/(window.innerHeight/2);
+    bgWrapper.style.transform='translate3d('+(x*-24)+'px,'+(y*-24)+'px,0)';
+    // 3D 头像随鼠标微倾
+    var hero3d=document.getElementById('hero3d');
+    if(hero3d)hero3d.style.transform='translate(-50%,-42%) rotateX('+(-y*6)+'deg) rotateY('+(x*8)+'deg)';
+  });
+
+  window.addEventListener('scroll',function(){
+    var scrollTop=window.pageYOffset||document.documentElement.scrollTop;
+    var maxScroll=container?(container.scrollHeight-window.innerHeight):0;
+    targetProgress=maxScroll>0?Math.max(0,Math.min(1,scrollTop/maxScroll)):0;
+  },{passive:true});
+
+  function setVisible(el,v){if(!el)return;el.style.visibility=v?'visible':'hidden';el.style.pointerEvents=v?'auto':'none';}
+  function applyStyle(el,op,tx,ty,bl){if(!el)return;el.style.opacity=op;el.style.transform='translate3d('+tx+'px,'+ty+'px,0)';el.style.filter='blur('+bl+'px)';}
+
+  function tick(){
+    currentProgress+=(targetProgress-currentProgress)*0.08;
+    var p=currentProgress;
+    if(videoOK){
+      var activeKey=getActiveKey(p);
+      var pLocal=activeKey==='v1'?Math.max(0,Math.min(1,p*3)):activeKey==='v2'?Math.max(0,Math.min(1,(p-0.333)*3)):Math.max(0,Math.min(1,(p-0.666)*3));
+      safeSeek(activeKey,pLocal*(durations[activeKey]||10));drawFrame();
+    }else{drawProcedural();}
+
+    if(viewport){if(p>0.965)viewport.classList.add('leaving');else viewport.classList.remove('leaving');}
+
+    var f=Math.min(1,Math.max(0,p/0.15));applyStyle(botanicalCard,1-f,f*-35,f*35,f*16);botanicalCard.style.pointerEvents=f>0.95?'none':'auto';
+    f=Math.min(1,Math.max(0,(p-0.03)/0.15));applyStyle(navHeader,1-f,0,f*-35,f*14);navHeader.style.pointerEvents=f>0.95?'none':'auto';
+    f=Math.min(1,Math.max(0,(p-0.06)/0.15));applyStyle(brandHeader,1-f,f*-25,f*-35,f*12);brandHeader.style.pointerEvents=f>0.95?'none':'auto';
+
+    var show=p>0.13&&p<0.55;setVisible(featuresContainer,show);
+    function animCard(el,enterStart,enterDur,exitStart,exitDur,tx,ty){if(!el)return;var op=0,bl=16,x=tx,y=ty;
+      if(p>=enterStart&&p<=exitStart){var r=Math.min(1,Math.max(0,(p-enterStart)/enterDur));op=r;bl=(1-r)*16;x=(1-r)*tx;y=(1-r)*ty;}
+      else if(p>exitStart&&p<=exitStart+exitDur){var r2=Math.min(1,Math.max(0,(p-exitStart)/exitDur));op=1-r2;bl=r2*16;x=r2*tx;y=r2*ty;}
+      applyStyle(el,op,x,y,bl);}
+    animCard(fCard1,0.15,0.15,0.333,0.12,-35,35);
+    animCard(fCard2,0.18,0.13,0.333,0.15,0,35);
+    animCard(fCard3,0.21,0.11,0.333,0.18,35,35);
+
+    setVisible(missionContainer,p>0.44&&p<0.86);
+    function animPara(el,inS,inE,holdE,outE){if(!el)return;var op=0,bl=20,y=120;
+      if(p>=inS&&p<inE){var r=(p-inS)/(inE-inS);op=r;bl=(1-r)*20;y=(1-r)*120;}
+      else if(p>=inE&&p<=holdE){op=1;bl=0;y=0;}
+      else if(p>holdE&&p<=outE){var r2=(p-holdE)/(outE-holdE);op=1-r2;bl=r2*20;y=r2*-120;}
+      else if(p>outE){op=0;bl=20;y=-120;}
+      applyStyle(el,op,0,y,bl);}
+    animPara(mPara1,0.44,0.47,0.56,0.59);
+    animPara(mPara2,0.60,0.63,0.70,0.73);
+    animPara(mPara3,0.74,0.77,0.83,0.86);
+
+    setVisible(feedbackContainer,p>0.84);
+    if(p>0.84){var opF=0,blF=20,yF=120;
+      if(p>=0.85&&p<0.89){var r3=(p-0.85)/0.04;opF=r3;blF=(1-r3)*20;yF=(1-r3)*120;}
+      else if(p>=0.89){opF=1;blF=0;yF=0;}
+      applyStyle(feedbackForm,opF,0,yF,blF);}
+
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  var menuOpen=false;
+  var hamburgerBtn=document.getElementById('hamburgerBtn'),mobileMenu=document.getElementById('mobileMenu');
+  var hLine1=document.getElementById('hLine1'),hLine2=document.getElementById('hLine2'),hLine3=document.getElementById('hLine3');
+  if(hamburgerBtn){hamburgerBtn.addEventListener('click',function(){menuOpen=!menuOpen;mobileMenu.classList.toggle('open',menuOpen);
+    hLine1.classList.toggle('top-open',menuOpen);hLine2.classList.toggle('mid-open',menuOpen);hLine3.classList.toggle('bot-open',menuOpen);});}
+  document.querySelectorAll('.mobile-link').forEach(function(a){a.addEventListener('click',function(){menuOpen=false;mobileMenu.classList.remove('open');
+    hLine1.classList.remove('top-open');hLine2.classList.remove('mid-open');hLine3.classList.remove('bot-open');});});
+
+  document.getElementById('ctaBtn').addEventListener('click',function(){window.scrollTo({top:window.innerHeight*0.9,behavior:'smooth'});});
+
+  var butterfly=document.getElementById('butterfly');
+  if(butterfly){var bx=0,by=0,tx=0,ty=0,wing=0;
+    document.addEventListener('mousemove',function(e){tx=e.clientX;ty=e.clientY;});
+    (function loop(){bx+=(tx-bx)*0.12;by+=(ty-by)*0.12;wing+=0.4;
+      butterfly.style.left=bx+'px';butterfly.style.top=by+'px';
+      butterfly.style.transform='translate(-50%,-50%) scaleY('+(1+Math.sin(wing)*0.25)+') rotate('+((ty-by)*0.5)+'deg)';
+      requestAnimationFrame(loop);})();
+    document.querySelectorAll('a,button,.entry,.premium-feature-card').forEach(function(el){
+      el.addEventListener('mouseenter',function(){butterfly.style.filter='drop-shadow(0 0 12px rgba(203,141,255,.95)) brightness(1.3)';});
+      el.addEventListener('mouseleave',function(){butterfly.style.filter='drop-shadow(0 0 7px rgba(203,141,255,.75))';});
+    });}
+
+  document.querySelectorAll('.entry').forEach(function(card){
+    card.addEventListener('mousemove',function(e){var rect=card.getBoundingClientRect();
+      var x=e.clientX-rect.left,y=e.clientY-rect.top,cx=rect.width/2,cy=rect.height/2;
+      card.style.transform='rotateX('+((y-cy)/13)+'deg) rotateY('+((cx-x)/13)+'deg) scale3d(1.015,1.015,1.015)';});
+    card.addEventListener('mouseleave',function(){card.style.transform='rotateX(0) rotateY(0) scale3d(1,1,1)';});
+  });
+
+  var navLinks=document.querySelectorAll('.premium-nav-link');
+  var ids=['cv-experience','cv-projects','cv-skills','cv-contact'];
+  window.addEventListener('scroll',function(){var st=window.pageYOffset||document.documentElement.scrollTop,cur='';
+    ids.forEach(function(id){var el=document.getElementById(id);if(el&&st>=el.offsetTop-220)cur='#'+id;});
+    navLinks.forEach(function(a){a.classList.toggle('active',cur!==''&&a.getAttribute('href')===cur);});},{passive:true});
+
+  handleResize();
+})();
+
+function copyWechat(btn){var txt='Chrystal_007';
+  function ok(){var old=btn.textContent;btn.textContent='已复制 ✓';setTimeout(function(){btn.textContent=old;},1800);}
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(ok);}
+  else{var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');ok();}catch(e){}document.body.removeChild(ta);}}
+</script>
+</body>
+</html>
